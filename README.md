@@ -1,50 +1,143 @@
-# Weekly Spaceman Project
+# The Weekly Spaceman - Project Management App
 
-This directory contains a minimal full‑stack prototype for managing content for **The Weekly Spaceman**.  It includes a Node.js backend API and a React component for a Kanban‑style project management board.  This is not a complete production system but a starting point you can extend.
+A Kanban-style project management board designed for managing the content pipeline at **The Weekly Spaceman**. Track articles and content through the entire workflow from idea to publication.
 
-## Structure
+## Features
 
-```
-weekly-spaceman-project/
-├── package.json          # NPM configuration and dependencies for the backend
-├── server.js             # Express backend API for tasks
-├── project_management_app.jsx  # React component for the Kanban board UI
-└── README.md             # Project overview and setup instructions
-```
+- **7-Stage Content Pipeline**: Idea → Assigned → Drafting → Editing → Fact-Check → Scheduled → Published
+- **Drag & Drop**: Move tasks between columns by dragging
+- **Full CRUD Operations**: Create, read, update, and delete tasks
+- **Task Details**: Title, description, assignee, due date, and status
+- **Responsive Design**: Works on desktop and mobile devices
+- **Real-time Updates**: Changes sync with the backend API
 
-## Getting Started
+## Quick Start
 
-1. **Install Node.js dependencies:**
+1. **Install dependencies:**
 
    ```bash
-   cd weekly-spaceman-project
    npm install
    ```
 
-2. **Run the backend server:**
+2. **Start the server:**
 
    ```bash
    npm start
    ```
 
-   The API will start on port `4000` by default (see `server.js`). You can change the port by setting the `PORT` environment variable.
+3. **Open your browser:**
 
-3. **Front‑end integration:**
+   Navigate to [http://localhost:4000](http://localhost:4000)
 
-   * The `project_management_app.jsx` file exports a React component that implements a Kanban board.  You can import this file into an existing React app (for example, using Create React App or Next.js) and mount it in your application.  The component expects an array of tasks and will display them grouped by status.
-   * To connect the component to the backend API, you’ll need to add API calls (e.g. `fetch('/tasks')`) to load and persist tasks.  The backend API supports the following routes:
+That's it! The app is ready to use.
 
-     - `GET /tasks` – returns all tasks (optionally filter by `status` or `assignee` query parameters).
-     - `POST /tasks` – create a new task.  Requires a `title` field and accepts `description`, `assignee`, `dueDate`, and `status`.
-     - `PUT /tasks/:id` – update a task by its ID.
-     - `DELETE /tasks/:id` – delete a task by its ID.
+## Project Structure
 
-4. **Customizing and Extending:**
+```
+weekly-spaceman-pm-app/
+├── package.json                    # NPM configuration and dependencies
+├── server.js                       # Express backend API
+├── public/
+│   └── index.html                  # Standalone frontend (Tailwind CSS)
+├── project_management_app.jsx      # React component (for integration)
+└── README.md                       # This file
+```
 
-   * **Persistence:** Currently tasks are stored in memory. To persist data between server restarts or scale to multiple users, integrate a database such as PostgreSQL, MongoDB, or SQLite and modify the API routes accordingly.
-   * **Authentication:** For multi‑user environments, add user authentication and authorization (e.g. JWT).  You can also attach tasks to specific users.
-   * **Deployment:** Deploy the backend to a platform like Heroku, Render, or an AWS/GCP instance.  For the front‑end, host it on Vercel, Netlify, or your own server.
+## API Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/tasks` | Get all tasks (optional: `?status=X` or `?assignee=Y`) |
+| POST | `/tasks` | Create a new task |
+| PUT | `/tasks/:id` | Update an existing task |
+| DELETE | `/tasks/:id` | Delete a task |
+| GET | `/api/statuses` | Get list of valid workflow statuses |
+
+### Task Object
+
+```json
+{
+  "id": "uuid",
+  "title": "Article title (required)",
+  "description": "Optional description",
+  "assignee": "Person responsible",
+  "dueDate": "2024-12-31",
+  "status": "Idea|Assigned|Drafting|Editing|Fact-Check|Scheduled|Published",
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "updatedAt": "2024-01-01T00:00:00.000Z"
+}
+```
+
+## Workflow Statuses
+
+| Status | Description |
+|--------|-------------|
+| **Idea** | Initial concept or pitch |
+| **Assigned** | Task assigned to a writer |
+| **Drafting** | Writer is working on the first draft |
+| **Editing** | Editor is reviewing and refining |
+| **Fact-Check** | Verifying facts and sources |
+| **Scheduled** | Ready for publication, scheduled |
+| **Published** | Live on the website |
+
+## Configuration
+
+### Environment Variables
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `PORT` | `4000` | Server port |
+
+Example:
+```bash
+PORT=3000 npm start
+```
+
+## React Component Integration
+
+The `project_management_app.jsx` file provides a React component that can be integrated into existing React applications (Create React App, Next.js, etc.).
+
+### Requirements
+
+- React 18+
+- shadcn/ui components
+- Tailwind CSS
+- lucide-react icons
+
+### Usage
+
+```jsx
+import ProjectManagementApp from './project_management_app';
+
+function App() {
+  return <ProjectManagementApp />;
+}
+```
+
+### Configure API URL
+
+Set the `REACT_APP_API_URL` environment variable:
+
+```bash
+REACT_APP_API_URL=http://localhost:4000 npm start
+```
+
+## Development Notes
+
+### Current Limitations
+
+- **In-Memory Storage**: Tasks are stored in memory and will be lost when the server restarts. For production, integrate a database (PostgreSQL, MongoDB, etc.).
+- **No Authentication**: All users share the same task pool. Add JWT or session-based auth for multi-user environments.
+
+### Future Improvements
+
+- Database integration for persistence
+- User authentication and authorization
+- File attachments for tasks
+- Comments and activity log
+- Email notifications for due dates
+- Export to CSV/PDF
 
 ## License
 
-This project is provided as a sample and does not include a specific license.  Feel free to use and modify it for your own purposes.
+MIT License - Feel free to use and modify for your own purposes.
